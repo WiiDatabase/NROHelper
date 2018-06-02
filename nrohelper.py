@@ -136,7 +136,7 @@ class NRO:
 
         langbuffer = self.rawnacp[:12288]
         self.language_entries = []
-        for lang in range(14):
+        for lang in range(15):
             entry = self.LanguageEntry().unpack(langbuffer[lang * 768:(lang * 768) + 768])
             self.language_entries.append(entry)
 
