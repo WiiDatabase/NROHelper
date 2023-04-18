@@ -39,10 +39,13 @@ class Editor:
 
     # NRO File browser
     def browse(self):
-        tmpfilename = filedialog.askopenfilename(
-            title="Select NRO",
-            filetypes=(("NRO Files", "*.nro"), ("All Files", "*.*"))
-        ) or self.filename
+        tmpfilename = (
+            filedialog.askopenfilename(
+                title="Select NRO",
+                filetypes=(("NRO Files", "*.nro"), ("All Files", "*.*")),
+            )
+            or self.filename
+        )
         self.load_nro_data(tmpfilename)
 
     # Load data from NRO specified in tmpfilename
@@ -52,13 +55,17 @@ class Editor:
         try:
             self.data = nrohelper.NROHelper(tmpfilename)
         except NotImplementedError:
-            messagebox.showerror("Error: Unsupported NRO",
-                                 "NRO files without Assets (e.g. those built with libtransistor) "
-                                 "are currently unsupported.")
+            messagebox.showerror(
+                "Error: Unsupported NRO",
+                "NRO files without Assets (e.g. those built with libtransistor) "
+                "are currently unsupported.",
+            )
             return False
         except:
-            messagebox.showerror("Error: Not a valid NRO",
-                                 "This is not a (valid) Nintendo Switch NRO file.")
+            messagebox.showerror(
+                "Error: Not a valid NRO",
+                "This is not a (valid) Nintendo Switch NRO file.",
+            )
             return False
 
         self.filename = tmpfilename
@@ -79,23 +86,32 @@ class Editor:
             # Enable "extract" menu item
             menubar.entryconfig("Extract", state="normal")
             if self.data.asset.icon.size > 0:
-                extract_menu.entryconfig("Icon", state='normal')
+                extract_menu.entryconfig("Icon", state="normal")
             else:
-                extract_menu.entryconfig("Icon", state='disabled')
+                extract_menu.entryconfig("Icon", state="disabled")
             if self.data.asset.nacp.size > 0:
-                extract_menu.entryconfig("NACP", state='normal')
+                extract_menu.entryconfig("NACP", state="normal")
             else:
-                extract_menu.entryconfig("NACP", state='disabled')
+                extract_menu.entryconfig("NACP", state="disabled")
             if self.data.asset.romfs.size > 0:
-                extract_menu.entryconfig("RomFS", state='normal')
+                extract_menu.entryconfig("RomFS", state="normal")
             else:
-                extract_menu.entryconfig("RomFS", state='disabled')
+                extract_menu.entryconfig("RomFS", state="disabled")
 
     def browse_image(self):
         """Opens filebrowser for browsing images."""
-        image_path = filedialog.askopenfilename(title="Select image file", filetypes=(
-        ("PNG Files", "*.png"), ("JPG Files", "*.jpg"), ("JPEG Files", "*.jpeg"), ("GIF Files", "*.gif"),
-        ("BMP Files", "*.bmp"), ("TGA Files", "*.tga"), ("All Files", "*.*")))
+        image_path = filedialog.askopenfilename(
+            title="Select image file",
+            filetypes=(
+                ("PNG Files", "*.png"),
+                ("JPG Files", "*.jpg"),
+                ("JPEG Files", "*.jpeg"),
+                ("GIF Files", "*.gif"),
+                ("BMP Files", "*.bmp"),
+                ("TGA Files", "*.tga"),
+                ("All Files", "*.*"),
+            ),
+        )
         self.image = Image.open(image_path).convert("RGB")
         self.image = self.image.resize((256, 256), Image.ANTIALIAS)
         buffer = io.BytesIO()
@@ -121,7 +137,9 @@ class Editor:
         try:
             self.data.edit_publisher(author_name)
         except ValueError:
-            messagebox.showerror("Saving failed", "Author name must be < 256 characters")
+            messagebox.showerror(
+                "Saving failed", "Author name must be < 256 characters"
+            )
             return False
 
         version = self.version.get()
@@ -139,7 +157,7 @@ class Editor:
             title="Select JPG path",
             filetypes=(("JPG Files", "*.jpg"), ("All Files", "*.*")),
             defaultextension=".jpg",
-            initialfile=os.path.splitext(os.path.basename(self.filename))[0]
+            initialfile=os.path.splitext(os.path.basename(self.filename))[0],
         )
 
         if icon_filename:
@@ -151,7 +169,7 @@ class Editor:
             title="Select NACP path",
             filetypes=(("NACP Files", "*.nacp"), ("All Files", "*.*")),
             defaultextension=".nacp",
-            initialfile=os.path.splitext(os.path.basename(self.filename))[0]
+            initialfile=os.path.splitext(os.path.basename(self.filename))[0],
         )
 
         if nacp_filename:
@@ -163,7 +181,7 @@ class Editor:
             title="Select RomFS path",
             filetypes=(("RomFS Files", "*.romfs"), ("All Files", "*.*")),
             defaultextension=".romfs",
-            initialfile=os.path.splitext(os.path.basename(self.filename))[0]
+            initialfile=os.path.splitext(os.path.basename(self.filename))[0],
         )
 
         if romfs_filename:
@@ -176,7 +194,10 @@ class Editor:
 
     @staticmethod
     def version_info():
-        messagebox.showinfo("About NROHelper GUI", "NROHelper GUI v" + VERSION + " by iCON (WiiDatabase.de)")
+        messagebox.showinfo(
+            "About NROHelper GUI",
+            "NROHelper GUI v" + VERSION + " by iCON (WiiDatabase.de)",
+        )
 
 
 # Main and title
@@ -187,7 +208,11 @@ try:
     ico_path = os.path.join(sys._MEIPASS, ico_path, ico_path)
 except:
     pass
-root.iconbitmap(root, ico_path)
+
+try:
+    root.iconbitmap(root, ico_path)
+except:
+    pass
 
 # UI elements
 elems = []
@@ -211,9 +236,9 @@ t3 = tk.Entry(frame, state="disabled", width=40, textvariable=editor.version)
 t3.grid(row=2, column=1, padx=5)
 elems.append(t3)
 
-#b1 = tk.Button(frame, text="Replace image...", state="disabled", command=editor.browse_image)
-#b1.grid(row=3, column=1)
-#elems.append(b1)
+# b1 = tk.Button(frame, text="Replace image...", state="disabled", command=editor.browse_image)
+# b1.grid(row=3, column=1)
+# elems.append(b1)
 
 # Icon preview
 im = Image.open(jpg_path)
@@ -229,22 +254,22 @@ root.config(menu=menubar)
 
 # "File"
 file = tk.Menu(menubar, tearoff=0)
-file.add_command(label='Open', command=editor.browse)
-file.add_command(label='Save', command=editor.save)
-file.add_command(label='Exit', command=root.quit)
+file.add_command(label="Open", command=editor.browse)
+file.add_command(label="Save", command=editor.save)
+file.add_command(label="Exit", command=root.quit)
 menubar.add_cascade(label="File", menu=file)
 
 # "Extract"
 extract_menu = tk.Menu(menubar, tearoff=0)
-extract_menu.add_command(label='Icon', command=editor.extract_icon, state="disabled")
-extract_menu.add_command(label='NACP', command=editor.extract_nacp, state="disabled")
-extract_menu.add_command(label='RomFS', command=editor.extract_romfs, state="disabled")
+extract_menu.add_command(label="Icon", command=editor.extract_icon, state="disabled")
+extract_menu.add_command(label="NACP", command=editor.extract_nacp, state="disabled")
+extract_menu.add_command(label="RomFS", command=editor.extract_romfs, state="disabled")
 menubar.add_cascade(label="Extract", menu=extract_menu, state="disabled")
 
 # "About"
 about_menu = tk.Menu(menubar, tearoff=0)
-about_menu.add_command(label='Source Code', command=editor.open_source)
-about_menu.add_command(label='Info', command=editor.version_info)
+about_menu.add_command(label="Source Code", command=editor.open_source)
+about_menu.add_command(label="Info", command=editor.version_info)
 menubar.add_cascade(label="About", menu=about_menu)
 
 # Main window
@@ -254,7 +279,7 @@ root.resizable(0, 0)
 if len(sys.argv) > 1:
     editor.load_nro_data(sys.argv[1])
 # TODO: Open dialog after starting, but makes fields uneditable!?
-#else:
+# else:
 #    editor.browse()
 
 root.mainloop()
